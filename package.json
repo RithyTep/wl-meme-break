@@ -1,8 +1,8 @@
 {
-  "name": "wl-meme-break",
-  "displayName": "WL Meme Break",
-  "description": "Take a break with random programming memes. Stay refreshed, code better!",
-  "version": "1.0.3",
+  "name": "meme-break",
+  "displayName": "Meme Break",
+  "description": "Take a break with the latest programming memes. Stay refreshed, code better!",
+  "version": "1.1.0",
   "publisher": "rithytep",
   "license": "MIT",
   "icon": "icon.png",
@@ -28,43 +28,43 @@
   "contributes": {
     "commands": [
       {
-        "command": "wl-meme.showMeme",
-        "title": "WL Meme: Show Random Meme"
+        "command": "meme-break.showMeme",
+        "title": "Meme Break: Show Latest Meme"
       },
       {
-        "command": "wl-meme.popupMeme",
-        "title": "WL Meme: Popup Meme (Quick View)"
+        "command": "meme-break.popupMeme",
+        "title": "Meme Break: Popup Meme (Quick View)"
       },
       {
-        "command": "wl-meme.startBreakTimer",
-        "title": "WL Meme: Start Break Timer"
+        "command": "meme-break.startBreakTimer",
+        "title": "Meme Break: Start Break Timer"
       },
       {
-        "command": "wl-meme.stopBreakTimer",
-        "title": "WL Meme: Stop Break Timer"
+        "command": "meme-break.stopBreakTimer",
+        "title": "Meme Break: Stop Break Timer"
       }
     ],
     "keybindings": [
       {
-        "command": "wl-meme.showMeme",
+        "command": "meme-break.showMeme",
         "key": "ctrl+shift+m",
         "mac": "cmd+shift+m"
       }
     ],
     "configuration": {
-      "title": "WL Meme Break",
+      "title": "Meme Break",
       "properties": {
-        "wl-meme.breakInterval": {
+        "meme-break.breakInterval": {
           "type": "number",
           "default": 60,
           "description": "Break reminder interval in minutes"
         },
-        "wl-meme.autoShowMeme": {
+        "meme-break.autoShowMeme": {
           "type": "boolean",
           "default": true,
           "description": "Automatically show meme when break timer triggers"
         },
-        "wl-meme.memeSubreddits": {
+        "meme-break.memeSubreddits": {
           "type": "array",
           "default": [
             "ProgrammerHumor",
@@ -80,11 +80,17 @@
           ],
           "description": "Subreddits to fetch memes from (10 channels by default)"
         },
-        "wl-meme.displayMode": {
+        "meme-break.displayMode": {
           "type": "string",
           "enum": ["panel", "popup"],
           "default": "panel",
           "description": "How to display memes: panel (full view) or popup (quick notification)"
+        },
+        "meme-break.sortBy": {
+          "type": "string",
+          "enum": ["hot", "new", "top"],
+          "default": "hot",
+          "description": "Sort memes by: hot (trending), new (latest), or top (best)"
         }
       }
     }

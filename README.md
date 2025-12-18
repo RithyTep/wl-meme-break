@@ -1,13 +1,16 @@
-# WL Meme Break
+# Meme Break
 
-> Take a break with random programming memes. Stay refreshed, code better! 😂
+> Take a break with the latest programming memes. Stay refreshed, code better! 😂
 
 ## Features
+
+### 🔥 Latest & Trending Memes
+Fetches hot/trending memes directly from Reddit for the freshest content.
 
 ### 🎲 Random Programming Memes
 Press `Cmd+Shift+M` (Mac) or `Ctrl+Shift+M` (Windows) for instant meme therapy.
 
-### 🪟 Popup Mode (NEW!)
+### 🪟 Popup Dialog Mode
 Quick meme popup that auto-closes after 30 seconds. Perfect for a quick laugh!
 
 ### ⏰ Break Timer
@@ -29,10 +32,10 @@ Set a timer to remind you to take breaks. Get memes automatically!
 
 | Command | Shortcut | Description |
 |---------|----------|-------------|
-| WL Meme: Show Random Meme | `Cmd+Shift+M` | Show meme in full panel |
-| WL Meme: Popup Meme | - | Quick popup meme (auto-close) |
-| WL Meme: Start Break Timer | - | Start break reminder |
-| WL Meme: Stop Break Timer | - | Stop break reminder |
+| Meme Break: Show Latest Meme | `Cmd+Shift+M` | Show meme in full panel |
+| Meme Break: Popup Meme | - | Quick popup meme (dialog) |
+| Meme Break: Start Break Timer | - | Start break reminder |
+| Meme Break: Stop Break Timer | - | Stop break reminder |
 
 ## Usage
 
@@ -40,21 +43,22 @@ Set a timer to remind you to take breaks. Get memes automatically!
 Just press `Cmd+Shift+M` whenever you need a laugh.
 
 ### Popup Mode
-Run "WL Meme: Popup Meme" for a quick view that auto-closes.
+Run "Meme Break: Popup Meme" for a quick view dialog that auto-closes.
 
 ### Break Timer
 1. Open Command Palette (`Cmd+Shift+P`)
-2. Run "WL Meme: Start Break Timer"
+2. Run "Meme Break: Start Break Timer"
 3. Get memes every hour (configurable)
 
 ## Settings
 
 ```json
 {
-  "wl-meme.breakInterval": 60,
-  "wl-meme.autoShowMeme": true,
-  "wl-meme.displayMode": "panel",  // or "popup"
-  "wl-meme.memeSubreddits": [
+  "meme-break.breakInterval": 60,
+  "meme-break.autoShowMeme": true,
+  "meme-break.displayMode": "panel",
+  "meme-break.sortBy": "hot",
+  "meme-break.memeSubreddits": [
     "ProgrammerHumor",
     "programmerreactions",
     "softwaregore",
@@ -68,6 +72,11 @@ Run "WL Meme: Popup Meme" for a quick view that auto-closes.
   ]
 }
 ```
+
+### Sort Options
+- `hot` - Trending memes (default)
+- `new` - Latest memes
+- `top` - Best memes
 
 ## Why Meme Breaks?
 
@@ -85,6 +94,13 @@ Run "WL Meme: Popup Meme" for a quick view that auto-closes.
 
 ## Changelog
 
+### v1.1.0
+- **Renamed** - Now "Meme Break" (removed WL prefix)
+- **Latest Memes** - Fetches hot/trending memes directly from Reddit
+- **Sort Options** - Choose between hot, new, or top memes
+- **Better Caching** - 5-minute cache for faster responses
+- **Direct Reddit API** - More reliable meme fetching
+
 ### v1.0.3
 - **Dialog Popup** - Centered modal dialog instead of side panel
 - Close by clicking outside, pressing ESC, or X button
@@ -95,7 +111,7 @@ Run "WL Meme: Popup Meme" for a quick view that auto-closes.
 - **Popup Mode** - Quick meme popup that auto-closes after 30s
 - **10 Subreddits** - Way more variety with 10 default channels
 - **Display Mode Setting** - Choose between panel or popup
-- New command: "WL Meme: Popup Meme (Quick View)"
+- New command: "Popup Meme (Quick View)"
 
 ### v1.0.1
 - Fix duplicate memes - now tracks last 50 memes to ensure uniqueness
