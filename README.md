@@ -78,6 +78,12 @@ Just press `Cmd+Shift+M` whenever you need a laugh.
 
 ## Changelog
 
+### v1.0.1
+- Fix duplicate memes - now tracks last 50 memes to ensure uniqueness
+- Fetch multiple memes at once for better variety
+- Added more built-in fallback memes
+- Added request timeout handling
+
 ### v1.0.0
 - Initial release
 - Random meme viewer

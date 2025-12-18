@@ -10,6 +10,8 @@ export interface Meme {
 
 export class MemeService {
   private subreddits: string[];
+  private seenMemes: Set<string> = new Set();
+  private maxHistory: number = 50;
 
   constructor(subreddits: string[] = ['ProgrammerHumor']) {
     this.subreddits = subreddits;
@@ -20,22 +22,58 @@ export class MemeService {
   }
 
   async getRandomMeme(): Promise<Meme> {
-    const subreddit = this.subreddits[Math.floor(Math.random() * this.subreddits.length)];
+    // Try multiple times to get a unique meme
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const subreddit = this.subreddits[Math.floor(Math.random() * this.subreddits.length)];
 
+      try {
+        const meme = await this.fetchFromReddit(subreddit);
+
+        // Check if we've seen this meme recently
+        if (!this.seenMemes.has(meme.url)) {
+          this.addToHistory(meme.url);
+          return meme;
+        }
+      } catch {
+        // Continue to next attempt
+      }
+    }
+
+    // Try fetching multiple memes at once
     try {
-      const meme = await this.fetchFromReddit(subreddit);
-      return meme;
+      const memes = await this.fetchMultipleMemes(10);
+      const uniqueMeme = memes.find(m => !this.seenMemes.has(m.url));
+      if (uniqueMeme) {
+        this.addToHistory(uniqueMeme.url);
+        return uniqueMeme;
+      }
     } catch {
-      // Fallback to built-in memes
-      return this.getBuiltInMeme();
+      // Fall through to built-in
+    }
+
+    // Fallback to built-in memes
+    return this.getBuiltInMeme();
+  }
+
+  private addToHistory(url: string): void {
+    this.seenMemes.add(url);
+
+    // Keep history size manageable
+    if (this.seenMemes.size > this.maxHistory) {
+      const firstItem = this.seenMemes.values().next().value;
+      if (firstItem) {
+        this.seenMemes.delete(firstItem);
+      }
     }
   }
 
   private fetchFromReddit(subreddit: string): Promise<Meme> {
     return new Promise((resolve, reject) => {
-      const url = `https://meme-api.com/gimme/${subreddit}`;
+      // Add timestamp to prevent caching
+      const timestamp = Date.now();
+      const url = `https://meme-api.com/gimme/${subreddit}?t=${timestamp}`;
 
-      https.get(url, (res) => {
+      const req = https.get(url, (res) => {
         let data = '';
 
         res.on('data', (chunk) => {
@@ -60,9 +98,61 @@ export class MemeService {
             reject(new Error('Failed to parse response'));
           }
         });
-      }).on('error', reject);
+      });
+
+      req.on('error', reject);
+
+      // Set timeout
+      req.setTimeout(5000, () => {
+        req.destroy();
+        reject(new Error('Request timeout'));
+      });
     });
   }
+
+  private fetchMultipleMemes(count: number): Promise<Meme[]> {
+    return new Promise((resolve, reject) => {
+      const subreddit = this.subreddits[Math.floor(Math.random() * this.subreddits.length)];
+      const timestamp = Date.now();
+      const url = `https://meme-api.com/gimme/${subreddit}/${count}?t=${timestamp}`;
+
+      const req = https.get(url, (res) => {
+        let data = '';
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          try {
+            const json = JSON.parse(data);
+            if (json.memes && Array.isArray(json.memes)) {
+              const memes: Meme[] = json.memes.map((m: Record<string, string>) => ({
+                title: m.title || 'Programming Meme',
+                url: m.url,
+                author: m.author || 'Unknown',
+                subreddit: m.subreddit || subreddit,
+                postLink: m.postLink || '',
+              }));
+              resolve(memes);
+            } else {
+              reject(new Error('No memes found'));
+            }
+          } catch {
+            reject(new Error('Failed to parse response'));
+          }
+        });
+      });
+
+      req.on('error', reject);
+      req.setTimeout(5000, () => {
+        req.destroy();
+        reject(new Error('Request timeout'));
+      });
+    });
+  }
+
+  private builtInIndex: number = 0;
 
   private getBuiltInMeme(): Meme {
     const builtInMemes: Meme[] = [
@@ -100,9 +190,38 @@ export class MemeService {
         author: "DevMemes",
         subreddit: "ProgrammerHumor",
         postLink: ""
+      },
+      {
+        title: "Git push --force",
+        url: "https://i.imgur.com/kZlyN61.gif",
+        author: "DevMemes",
+        subreddit: "ProgrammerHumor",
+        postLink: ""
+      },
+      {
+        title: "Senior dev reviewing my code",
+        url: "https://i.imgur.com/c4jt321.png",
+        author: "DevMemes",
+        subreddit: "ProgrammerHumor",
+        postLink: ""
+      },
+      {
+        title: "Tabs vs Spaces debate",
+        url: "https://i.imgur.com/91sn32X.jpg",
+        author: "DevMemes",
+        subreddit: "ProgrammerHumor",
+        postLink: ""
       }
     ];
 
-    return builtInMemes[Math.floor(Math.random() * builtInMemes.length)];
+    // Cycle through built-in memes instead of random
+    const meme = builtInMemes[this.builtInIndex % builtInMemes.length];
+    this.builtInIndex++;
+    return meme;
+  }
+
+  clearHistory(): void {
+    this.seenMemes.clear();
+    this.builtInIndex = 0;
   }
 }
