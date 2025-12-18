@@ -2,7 +2,7 @@
   "name": "wl-meme-break",
   "displayName": "WL Meme Break",
   "description": "Take a break with random programming memes. Stay refreshed, code better!",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "rithytep",
   "license": "MIT",
   "icon": "icon.png",
@@ -30,6 +30,10 @@
       {
         "command": "wl-meme.showMeme",
         "title": "WL Meme: Show Random Meme"
+      },
+      {
+        "command": "wl-meme.popupMeme",
+        "title": "WL Meme: Popup Meme (Quick View)"
       },
       {
         "command": "wl-meme.startBreakTimer",
@@ -62,8 +66,25 @@
         },
         "wl-meme.memeSubreddits": {
           "type": "array",
-          "default": ["ProgrammerHumor"],
-          "description": "Subreddits to fetch memes from"
+          "default": [
+            "ProgrammerHumor",
+            "programmerreactions",
+            "softwaregore",
+            "iiiiiiitttttttttttt",
+            "techhumor",
+            "linuxmemes",
+            "webdev",
+            "javascript",
+            "coding",
+            "cscareerquestions"
+          ],
+          "description": "Subreddits to fetch memes from (10 channels by default)"
+        },
+        "wl-meme.displayMode": {
+          "type": "string",
+          "enum": ["panel", "popup"],
+          "default": "panel",
+          "description": "How to display memes: panel (full view) or popup (quick notification)"
         }
       }
     }
