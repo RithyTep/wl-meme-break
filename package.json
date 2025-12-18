@@ -2,7 +2,7 @@
   "name": "meme-break",
   "displayName": "Meme Break",
   "description": "Take coding breaks with fresh programming memes - stay refreshed, code better!",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "rithytep",
   "license": "MIT",
   "icon": "icon.png",
@@ -79,6 +79,11 @@
             "cscareerquestions"
           ],
           "description": "Subreddits to fetch memes from (10 channels by default)"
+        },
+        "meme-break.includeKhmerMemes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include Khmer/Cambodia memes from r/cambodia and built-in Khmer meme collection"
         },
         "meme-break.displayMode": {
           "type": "string",

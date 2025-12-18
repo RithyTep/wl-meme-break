@@ -31,9 +31,15 @@ export class MemeService {
   private memeCache: Map<string, Meme[]> = new Map();
   private cacheExpiry: Map<string, number> = new Map();
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+  private includeKhmerMemes: boolean = false;
+  private readonly KHMER_SUBREDDITS = ['cambodia', 'Khmer', 'phnompenh'];
 
   constructor(subreddits: string[] = ['ProgrammerHumor']) {
     this.subreddits = subreddits;
+  }
+
+  setIncludeKhmerMemes(include: boolean): void {
+    this.includeKhmerMemes = include;
   }
 
   setSubreddits(subreddits: string[]): void {
@@ -48,9 +54,14 @@ export class MemeService {
   }
 
   async getRandomMeme(): Promise<Meme> {
+    // Include Khmer subreddits if enabled
+    const allSubreddits = this.includeKhmerMemes
+      ? [...this.subreddits, ...this.KHMER_SUBREDDITS]
+      : this.subreddits;
+
     // Try to get a fresh meme from hot/new posts
     for (let attempt = 0; attempt < 3; attempt++) {
-      const subreddit = this.subreddits[Math.floor(Math.random() * this.subreddits.length)];
+      const subreddit = allSubreddits[Math.floor(Math.random() * allSubreddits.length)];
 
       try {
         const memes = await this.fetchFromReddit(subreddit);
@@ -66,7 +77,7 @@ export class MemeService {
     }
 
     // Try all subreddits
-    for (const subreddit of this.subreddits) {
+    for (const subreddit of allSubreddits) {
       try {
         const memes = await this.fetchFromReddit(subreddit);
         const uniqueMeme = memes.find(m => !this.seenMemes.has(m.url));

@@ -30,9 +30,11 @@ export function activate(context: vscode.ExtensionContext): void {
   const autoShowMeme = config.get<boolean>('autoShowMeme') ?? true;
   const displayMode = config.get<string>('displayMode') || 'panel';
   const sortBy = config.get<SortBy>('sortBy') || 'hot';
+  const includeKhmerMemes = config.get<boolean>('includeKhmerMemes') ?? false;
 
   memeService = new MemeService(subreddits);
   memeService.setSortBy(sortBy);
+  memeService.setIncludeKhmerMemes(includeKhmerMemes);
   popupMeme = new PopupMeme(memeService);
 
   breakTimer = new BreakTimer(breakInterval, () => {
@@ -84,6 +86,7 @@ export function activate(context: vscode.ExtensionContext): void {
       const newConfig = vscode.workspace.getConfiguration('meme-break');
       memeService.setSubreddits(newConfig.get<string[]>('memeSubreddits') || DEFAULT_SUBREDDITS);
       memeService.setSortBy(newConfig.get<SortBy>('sortBy') || 'hot');
+      memeService.setIncludeKhmerMemes(newConfig.get<boolean>('includeKhmerMemes') ?? false);
       breakTimer.setInterval(newConfig.get<number>('breakInterval') || 60);
     }
   });
