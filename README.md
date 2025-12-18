@@ -85,6 +85,12 @@ Run "WL Meme: Popup Meme" for a quick view that auto-closes.
 
 ## Changelog
 
+### v1.0.3
+- **Dialog Popup** - Centered modal dialog instead of side panel
+- Close by clicking outside, pressing ESC, or X button
+- Smooth slide-in animation
+- Dark overlay background for focus
+
 ### v1.0.2
 - **Popup Mode** - Quick meme popup that auto-closes after 30s
 - **10 Subreddits** - Way more variety with 10 default channels
