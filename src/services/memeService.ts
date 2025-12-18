@@ -54,6 +54,15 @@ export class MemeService {
   }
 
   async getRandomMeme(): Promise<Meme> {
+    // If Khmer memes enabled, 30% chance to show Khmer meme directly
+    if (this.includeKhmerMemes && Math.random() < 0.3) {
+      const khmerMeme = this.getKhmerMeme();
+      if (!this.seenMemes.has(khmerMeme.url)) {
+        this.addToHistory(khmerMeme.url);
+        return khmerMeme;
+      }
+    }
+
     // Include Khmer subreddits if enabled
     const allSubreddits = this.includeKhmerMemes
       ? [...this.subreddits, ...this.KHMER_SUBREDDITS]
@@ -100,6 +109,11 @@ export class MemeService {
       }
     } catch {
       // Fall through
+    }
+
+    // If Khmer memes enabled, try Khmer collection before generic fallback
+    if (this.includeKhmerMemes) {
+      return this.getKhmerMeme();
     }
 
     // Final fallback to built-in memes
@@ -242,6 +256,113 @@ export class MemeService {
   }
 
   private builtInIndex: number = 0;
+  private khmerMemeIndex: number = 0;
+
+  // Built-in Khmer meme collection - popular memes from Cambodian internet culture
+  private readonly KHMER_MEMES: Meme[] = [
+    {
+      title: "ខ្ញុំមិនយល់ code នេះទេ 😂",
+      url: "https://i.imgflip.com/2hgfw.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "When boss says 'តិចទៀតហើយ deadline'",
+      url: "https://i.imgflip.com/30b1gx.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "អត់មានប្រាក់ខែ តែមាន bug ជាច្រើន",
+      url: "https://i.imgflip.com/1bij.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "Junior dev: 'ខ្ញុំធ្វើរួចហើយ!' Senior: 'ចុះ test?'",
+      url: "https://i.imgflip.com/3si4.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "កាលពី deploy production ដំបូង",
+      url: "https://i.imgflip.com/26am.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "Me pretending to understand the code review",
+      url: "https://i.imgflip.com/1otk96.jpg",
+      author: "Cambodia Dev",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "បងថា 5 នាទីទៀត... 3 ម៉ោងក្រោយ",
+      url: "https://i.imgflip.com/1ur9b0.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "Client: 'តិចៗទេ change request'",
+      url: "https://i.imgflip.com/2za3u1.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "ពេល QA រកឃើញ bug មួយទៀត",
+      url: "https://i.imgflip.com/4acd7j.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "Friday deploy be like... 🔥",
+      url: "https://i.imgflip.com/3oevdk.jpg",
+      author: "Cambodia Dev",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "ខ្ញុំ vs Bug ដែលខ្ញុំបង្កើតខ្លួនឯង",
+      url: "https://i.imgflip.com/2wifvo.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    },
+    {
+      title: "អារម្មណ៍ពេល code compile បាន",
+      url: "https://i.imgflip.com/3lmzyx.jpg",
+      author: "Troll Khmer",
+      subreddit: "KhmerMemes",
+      postLink: "",
+      created: Date.now()
+    }
+  ];
+
+  getKhmerMeme(): Meme {
+    const meme = this.KHMER_MEMES[this.khmerMemeIndex % this.KHMER_MEMES.length];
+    this.khmerMemeIndex++;
+    return { ...meme, created: Date.now() };
+  }
 
   private getBuiltInMeme(): Meme {
     const builtInMemes: Meme[] = [
@@ -319,6 +440,7 @@ export class MemeService {
   clearHistory(): void {
     this.seenMemes.clear();
     this.builtInIndex = 0;
+    this.khmerMemeIndex = 0;
     this.memeCache.clear();
     this.cacheExpiry.clear();
   }
